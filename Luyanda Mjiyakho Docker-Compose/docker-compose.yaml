@@ -1,0 +1,24 @@
+version: "3.0"
+services: # KEYWORD FOLLOWED BY SERVICES STORED IN THE COMPOSER
+  php: # type of service
+    image: php:latest # image name, can cause some problems as we test the software in the specified version
+    container_name: website.example.com_www # container name is very important we should always give a name
+    ports:
+      - 8080:80 # listen to the incoming message on port 8080 but the inside of the container uses port 80
+    command: php -S 0.0.0.0:80 -t /var/www/html
+    volumes: # where the server will connect with the PHP
+      - ./webroot:/var/www/html
+
+  mysql: # MySQL service starts here
+    image: mysql:latest
+    container_name: webshop.example.com_mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql-data:/var/lib/mysql # Persistent data storage
+    environment:
+      MYSQL_USER: webdb
+      MYSQL_PASSWORD: webdb
+      MYSQL_DATABASE: webdb
+      MYSQL_ROOT_PASSWORD: verySecreatePassword
+      MYSQL_ROOT_HOST: "0.0.0.0/0"
